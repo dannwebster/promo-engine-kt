@@ -20,7 +20,7 @@ class And(val predicates: PredicateChain): Predicate() {
 }
 
 class Or(val predicates: PredicateChain): Predicate() {
-    override operator fun invoke(cart: Cart): Boolean = predicates.map { p -> p(cart) }.reduce { a, b ->  a || b }
+    override operator fun invoke(cart: Cart): Boolean = predicates.map { p -> p(cart) }.fold(false) { a, b ->  a || b }
 }
 
 
@@ -38,5 +38,5 @@ fun or(predicates: PredicateChain): Predicate =
         else if (predicates.count() == 1)
             predicates.first()
         else
-            And(predicates)
+            Or(predicates)
 

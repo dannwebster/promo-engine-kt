@@ -1,5 +1,6 @@
 package com.fandango
 
+import com.fandango.data.PromoDao
 import com.fandango.data.RuleDao
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Bean
 open class PromoEngineApplication() : CommandLineRunner {
     @Bean open fun dataSource() = buildDb()
     @Bean open fun jdbcTemplate() = JdbcTemplate(dataSource())
+    @Bean open fun promoDao() = PromoDao(jdbcTemplate())
     @Bean open fun ruleDao() = RuleDao(jdbcTemplate())
     @Bean open fun actionFactory() = ActionFactory()
     @Bean open fun predicateFactory() = DefaultPredicateFactory

@@ -24,11 +24,20 @@ open class PredicateFactory(val predicateBuilders: List<PredicateBuilder>) {
 
     fun createCompositePredicate(ruleRecords: Iterable<RuleRecord>): Predicate = and(
                 segmentPredicatesByType(ruleRecords)
-                        .map { (type, records) -> Pair(typeToComposition.get(type), records) }
-                        .map { (composition, records)-> Pair(composition, toPredicates(records)) }
-                        .map { (composition, predicates) -> composition?.invoke(predicates)}
+                        .map { (type, records) -> pairRecordListWithCompositionType(type, records) }
+                        .map { (composition, records)-> transformRecordsToPredicates(composition, records) }
+                        .map { (composition, predicates) -> composePredicates(composition, predicates) }
                         .filterNotNull()
             )
+
+    fun pairRecordListWithCompositionType(type: RecordType, records: Iterable<RuleRecord>) =
+            Pair(typeToComposition.get(type), records)
+
+    fun transformRecordsToPredicates(composition: Composition?, records: Iterable<RuleRecord>) =
+        Pair(composition, toPredicates(records))
+
+    fun composePredicates(composition: Composition?, predicates: PredicateChain) =
+            composition?.invoke(predicates)
 
     fun toPredicates(ruleRecords: Iterable<RuleRecord>): PredicateChain = ruleRecords
                     .filter { record -> typeToBuilderMap.containsKey(record.type)}

@@ -6,9 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate
 import java.math.BigDecimal
 import java.sql.ResultSet
 
-fun String?.toBigDecimal(): BigDecimal? = if (this.isNullOrEmpty()) null else BigDecimal(this)
 
 class RuleDao(val jdbcTemplate: JdbcTemplate) {
+    fun String?.toBigDecimal(): BigDecimal? = if (this.isNullOrEmpty()) null else BigDecimal(this)
 
     fun recordsByCampaignId(campaignId: String) = jdbcTemplate
             .query("select * from rules where campaign_id = ?", arrayOf(campaignId))
